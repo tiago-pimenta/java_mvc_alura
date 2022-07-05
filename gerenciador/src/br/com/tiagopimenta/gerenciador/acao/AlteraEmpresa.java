@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import br.com.tiagopimenta.gerenciador.modelo.Banco;
 import br.com.tiagopimenta.gerenciador.modelo.Empresa;
 
-public class AlteraEmpresa {
+public class AlteraEmpresa implements Acao {
 
 	public String executa(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String paramId = request.getParameter("id");

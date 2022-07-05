@@ -9,12 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.tiagopimenta.gerenciador.acao.AlteraEmpresa;
-import br.com.tiagopimenta.gerenciador.acao.ListaEmpresas;
-import br.com.tiagopimenta.gerenciador.acao.MostraEmpresa;
-import br.com.tiagopimenta.gerenciador.acao.NovaEmpresa;
-import br.com.tiagopimenta.gerenciador.acao.NovaEmpresaForm;
-import br.com.tiagopimenta.gerenciador.acao.RemoveEmpresa;
+import br.com.tiagopimenta.gerenciador.acao.Acao;
 
 @WebServlet("/entrada")
 public class UnicaEntradaServlet extends HttpServlet {
@@ -24,7 +19,29 @@ public class UnicaEntradaServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		String paramAcao = request.getParameter("acao");
+		
+		String nomeDaClasse = "br.com.tiagopimenta.gerenciador.acao." + paramAcao;
+		
+		String nome;
+		
+		try {
+			Class classe = Class.forName(nomeDaClasse); // Carrega a classe com o nome		
+			Acao acao = (Acao) classe.newInstance();
+			nome = acao.executa(request, response);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			throw new ServletException(e);
+		}
+		
+		String[] tipoEEndereco = nome.split(":");
+		
+		if (tipoEEndereco[0].equals("forward")) {
+			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/view/" + tipoEEndereco[1]);
+			rd.forward(request, response);
+		} else {
+			response.sendRedirect(tipoEEndereco[1]);
+		}
 
+		/*
 		String nome = null;
 
 		if (paramAcao.equals("ListaEmpresas")) {
@@ -46,15 +63,7 @@ public class UnicaEntradaServlet extends HttpServlet {
 			NovaEmpresaForm acao = new NovaEmpresaForm();
 			nome = acao.executa(request, response);
 		}
-
-		String[] tipoEEndereco = nome.split(":");
-		
-		if (tipoEEndereco[0].equals("forward")) {
-			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/view/" + tipoEEndereco[1]);
-			rd.forward(request, response);
-		} else {
-			response.sendRedirect(tipoEEndereco[1]);
-		}
+		*/
 
 	}
 
