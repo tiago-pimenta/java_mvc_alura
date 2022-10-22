@@ -9,6 +9,8 @@
 </head>
 <body>
 
+	<c:import url="logout-parcial.jsp"/>
+	
 	<form action="${ linkEntradaServlet }" method="post">
 	
 		<input type="hidden" name="acao" value="NovaEmpresa"/>
